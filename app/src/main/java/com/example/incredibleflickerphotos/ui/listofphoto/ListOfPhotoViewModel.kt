@@ -23,6 +23,8 @@ class ListOfPhotoViewModel : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
 
+    private val loadingState = MutableLiveData<Boolean>()
+
     @Inject
     lateinit var remoteServiceProvider: RemoteServiceProvider
 
@@ -33,7 +35,8 @@ class ListOfPhotoViewModel : ViewModel() {
     fun getMetaDataOfPhoto() {
         val disposable = remoteServiceProvider.getMetaDataOfPhotosResponse()
             .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
+            .doOnSubscribe {loadingState.postValue(true)}
             .flatMap {
                 Observable.fromIterable(it.photos.photo)
             }
@@ -45,6 +48,7 @@ class ListOfPhotoViewModel : ViewModel() {
             }, {
                 Log.i("Viewmodel", "onComplete")
                 mutableLiveData.postValue(listOfPhotos)
+                loadingState.postValue(false)
             })
             .addTo(compositeDisposable)
     }
@@ -66,4 +70,6 @@ class ListOfPhotoViewModel : ViewModel() {
      fun getLiveDataOfListOfPhoto(): LiveData<ArrayList<PhotoWithDiffSizeResponse>> {
         return mutableLiveData
     }
+
+    fun getLoadingState(): LiveData<Boolean> = loadingState
 }
