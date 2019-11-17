@@ -1,7 +1,8 @@
-package com.example.incredibleflickerphotos
+package com.example.incredibleflickerphotos.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.incredibleflickerphotos.R
 
 class MainActivity : AppCompatActivity() {
 
