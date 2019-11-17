@@ -40,6 +40,14 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+
+//     test
+    testImplementation "org.mockito:mockito-core:2.25.1"
+
+//    Test helpers for LiveData
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+
+
     implementation "androidx.recyclerview:recyclerview:1.0.0"
 
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
@@ -67,8 +75,12 @@ dependencies {
 //    ViewModel and LiveData
     implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
 
-//    Test helpers for LiveData
-    testImplementation "androidx.arch.core:core-testing:2.1.0"
+// jackson
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.9.9'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.9'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.9'
+
 
 
 }

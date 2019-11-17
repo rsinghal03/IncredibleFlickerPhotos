@@ -19,7 +19,4 @@ class FlickerPhotoModule {
     fun provideRemoteServiceProvider(flickerService: FlickerService): RemoteServiceProvider {
         return RemoteServiceProviderImpl(flickerService)
     }
-
-
-
 }

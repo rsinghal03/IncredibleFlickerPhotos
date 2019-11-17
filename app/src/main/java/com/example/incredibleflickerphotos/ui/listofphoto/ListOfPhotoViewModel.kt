@@ -1,15 +1,12 @@
 package com.example.incredibleflickerphotos.ui.listofphoto
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.incredibleflickerphotos.IncredibleFlickerPhotosApplication
 import com.example.incredibleflickerphotos.data.RemoteServiceProvider
-import com.example.incredibleflickerphotos.data.model.MetaDataOfPhotosResponse
 import com.example.incredibleflickerphotos.data.model.PhotoWithDiffSizeResponse
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
@@ -42,12 +39,11 @@ class ListOfPhotoViewModel : ViewModel() {
             }
             .subscribe({
                 getPhotoWithDiffSize(it.id)
-                Log.i("Viewmodel", "onNext")
+//                Log.i("Viewmodel", "onNext")
             }, {
-                Log.i("Viewmodel", "MetaDataOnErrorCalled")
+//                Log.i("Viewmodel", "MetaDataOnErrorCalled")
             }, {
-                Log.i("Viewmodel", "onComplete")
-                mutableLiveData.postValue(listOfPhotos)
+//                Log.i("Viewmodel", "onComplete")
                 loadingState.postValue(false)
             })
             .addTo(compositeDisposable)
@@ -58,11 +54,11 @@ class ListOfPhotoViewModel : ViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.single())
             .subscribe({
-                Log.i("Viewmodel", "onSuccess")
+//                Log.i("Viewmodel", "onSuccess")
                 listOfPhotos.add(it)
                 mutableLiveData.postValue(listOfPhotos)
             }, {
-                Log.i("Viewmodel", "onErrorDiffSizePhoto")
+//                Log.i("Viewmodel", "onErrorDiffSizePhoto")
             })
             .addTo(compositeDisposable)
     }
@@ -72,4 +68,8 @@ class ListOfPhotoViewModel : ViewModel() {
     }
 
     fun getLoadingState(): LiveData<Boolean> = loadingState
+
+    override fun onCleared() {
+        super.onCleared()
+    }
 }
