@@ -1,18 +1,19 @@
 package com.example.incredibleflickerphotos
 
 import android.app.Application
+import com.example.incredibleflickerphotos.dependencyinjection.DaggerFlickerPhotoComponent
 import com.example.incredibleflickerphotos.dependencyinjection.FlickerPhotoComponent
 
 class IncredibleFlickerPhotosApplication : Application() {
 
-    private lateinit var flickerPhotoComponent: FlickerPhotoComponent
+    lateinit var flickerPhotoComponent: FlickerPhotoComponent
 
     init {
         initDagger()
     }
 
     private fun initDagger() {
-//        flickerPhotoComponent = DaggerFlickerPhotoComponent.create()
+        flickerPhotoComponent = DaggerFlickerPhotoComponent.create()
     }
 
     companion object {
