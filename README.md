@@ -6,7 +6,7 @@ Demo video of the App
 
 # About the project
 
-The project is developed using MVVM architecture pattern and Kotlin as development language.  
+The project is developed using MVVM architecture pattern and Kotlin as development language.  The unit testing is done for the viewmodel class.
 
 Libraries used are:
 
@@ -16,6 +16,7 @@ Libraries used are:
     Jackson
     Android architecture component 
     Glide
+    Mockito
     
 
 Dagger is used for dependency injection
