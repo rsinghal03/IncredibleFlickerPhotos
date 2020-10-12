@@ -21,7 +21,7 @@ interface FlickerService {
                                      @Query("method") method: String,
                                      @Query("api_key") apiKey: String,
                                      @Query("user_id") userId: String,
-                                     @Query("nojsoncallback") noJsonCallback: String): Single<PhotoWithDiffSizeResponse>
+                                     @Query("nojsoncallback") noJsonCallback: String): Observable<PhotoWithDiffSizeResponse>
 
 
 }

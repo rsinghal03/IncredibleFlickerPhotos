@@ -9,6 +9,6 @@ interface RemoteServiceProvider {
 
     fun getMetaDataOfPhotosResponse(): Observable<MetaDataOfPhotosResponse>
 
-    fun getPhotoWithDiffSizeResponse(photoId: String): Single<PhotoWithDiffSizeResponse>
+    fun getPhotoWithDiffSizeResponse(photoId: String): Observable<PhotoWithDiffSizeResponse>
 
 }
