@@ -22,7 +22,7 @@ class RemoteServiceProviderImpl(private val flickerService: FlickerService) : Re
             FORMAT, API_KEY, NO_JSON_CALLBACK)
     }
 
-    override fun getPhotoWithDiffSizeResponse(photoId: String): Single<PhotoWithDiffSizeResponse> {
+    override fun getPhotoWithDiffSizeResponse(photoId: String): Observable<PhotoWithDiffSizeResponse> {
         return flickerService.getPhotoWithDiffSizeResponse(
             FORMAT, photoId, METHOD_PHOTOS_SIZES, API_KEY, USER_ID, NO_JSON_CALLBACK)
     }

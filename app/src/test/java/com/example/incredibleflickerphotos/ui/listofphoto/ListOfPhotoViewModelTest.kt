@@ -1,52 +1,54 @@
 package com.example.incredibleflickerphotos.ui.listofphoto
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
-import com.example.incredibleflickerphotos.MockDataProvider
+import com.example.incredibleflickerphotos.IncredibleFlickerPhotosApplication
 import com.example.incredibleflickerphotos.data.RemoteServiceProvider
-import com.example.incredibleflickerphotos.data.model.PhotoWithDiffSizeResponse
-import io.reactivex.Observable
-import io.reactivex.android.plugins.RxAndroidPlugins
-import io.reactivex.schedulers.Schedulers
+import com.example.incredibleflickerphotos.di.DaggerTestComponent
+import com.example.incredibleflickerphotos.di.TestComponent
+import com.example.incredibleflickerphotos.di.TestModule
+import com.example.incredibleflickerphotos.util.getOrAwaitValue
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
+import org.mockito.ArgumentMatchers.anyString
+import javax.inject.Inject
 
 class ListOfPhotoViewModelTest {
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
-    @Mock
-    private lateinit var observerLoadingState: Observer<Boolean>
-
-    @Mock
-    private lateinit var observerListOfPhoto: Observer<ArrayList<PhotoWithDiffSizeResponse>>
-
-    @Mock
-    private lateinit var remoteServiceProvider: RemoteServiceProvider
-
+    @Inject
+    lateinit var remoteServiceProvider: RemoteServiceProvider
+    private lateinit var appTestComponent: TestComponent
     private lateinit var viewModel: ListOfPhotoViewModel
+
 
     @Before
     fun setUp() {
-        RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline()}
         RxUnitTestTool.asyncToSync()
-        MockitoAnnotations.initMocks(this)
+        appTestComponent = DaggerTestComponent.builder().testModule(TestModule()).build()
+        IncredibleFlickerPhotosApplication.setComponent(appTestComponent)
+        appTestComponent.inject(this)
         viewModel = ListOfPhotoViewModel()
-        viewModel.getLoadingState().observeForever { observerLoadingState }
-        viewModel.getLiveDataOfListOfPhoto().observeForever { observerListOfPhoto }
     }
 
     @Test
-    fun shouldReturnMetaDataOfPhoto() {
-        Mockito.`when`(remoteServiceProvider.getMetaDataOfPhotosResponse())
-            .thenReturn(Observable.just(MockDataProvider.getMockMetaDataOfPhotos()))
-        viewModel.getMetaDataOfPhoto()
-        assert(viewModel.getLoadingState().hasActiveObservers())
-        assert(viewModel.getLiveDataOfListOfPhoto().hasActiveObservers())
+    fun getListOfPhoto() {
+        viewModel.getListOfPhotos()
+        remoteServiceProvider.getMetaDataOfPhotosResponse().test().assertNoErrors()
+            .assertValue { it.photos.perpage == 100 }
+        remoteServiceProvider.getPhotoWithDiffSizeResponse(anyString()).test().assertNoErrors()
+            .assertValue(
+                remoteServiceProvider.getPhotoWithDiffSizeResponse(anyString()).blockingFirst()
+            )
+        assertEquals(false, viewModel.loadingState.getOrAwaitValue())
+        val expected = remoteServiceProvider.getMetaDataOfPhotosResponse()
+            .flatMapIterable { it.photos.photo }
+            .flatMap { remoteServiceProvider.getPhotoWithDiffSizeResponse(it.id) }
+            .toList()
+            .blockingGet()
+        assertEquals(expected, viewModel.listOfPhoto.getOrAwaitValue())
     }
 }

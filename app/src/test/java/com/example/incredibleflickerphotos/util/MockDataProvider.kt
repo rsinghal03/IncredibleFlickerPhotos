@@ -1,27 +1,20 @@
-package com.example.incredibleflickerphotos
+package com.example.incredibleflickerphotos.util
 
 import com.example.incredibleflickerphotos.data.model.MetaDataOfPhotosResponse
 import com.example.incredibleflickerphotos.data.model.PhotoWithDiffSizeResponse
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import io.reactivex.Observable
 
 class MockDataProvider {
 
     companion object {
-        fun getMockMetaDataOfPhotos(): MetaDataOfPhotosResponse {
-            return jacksonObjectMapper().readValue<MetaDataOfPhotosResponse>(jsonStringOfMetaDataPhotos)
+        fun getMockMetaDataOfPhotos(): Observable<MetaDataOfPhotosResponse> {
+            return Observable.just(jacksonObjectMapper().readValue(jsonStringOfMetaDataPhotos))
         }
 
-        fun getMockPhotoWithDiffSize(): PhotoWithDiffSizeResponse {
-            return jacksonObjectMapper().readValue(jsonStringOfPhotoWithDiffSize)
-        }
-
-        fun arrayListOfPhotoWithDiffSize(): ArrayList<PhotoWithDiffSizeResponse> {
-            val arrayList = arrayListOf<PhotoWithDiffSizeResponse>()
-            for (i in 1..10){
-                    arrayList.add(getMockPhotoWithDiffSize())
-                }
-            return arrayList
+        fun getMockPhotoWithDiffSize(): Observable<PhotoWithDiffSizeResponse> {
+            return Observable.just(jacksonObjectMapper().readValue(jsonStringOfPhotoWithDiffSize))
         }
     }
 }

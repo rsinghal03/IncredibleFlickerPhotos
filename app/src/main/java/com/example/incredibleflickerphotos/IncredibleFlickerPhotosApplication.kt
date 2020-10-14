@@ -1,19 +1,28 @@
 package com.example.incredibleflickerphotos
 
 import android.app.Application
+import androidx.annotation.VisibleForTesting
 import com.example.incredibleflickerphotos.dependencyinjection.DaggerFlickerPhotoComponent
 import com.example.incredibleflickerphotos.dependencyinjection.FlickerPhotoComponent
+import com.example.incredibleflickerphotos.dependencyinjection.FlickerPhotoModule
+import timber.log.Timber
 
+var flickerPhotoComponent: FlickerPhotoComponent? = null
 class IncredibleFlickerPhotosApplication : Application() {
 
-    lateinit var flickerPhotoComponent: FlickerPhotoComponent
 
     init {
         initDagger()
+        initTimber()
+    }
+
+    private fun initTimber() {
+        Timber.plant(Timber.DebugTree())
     }
 
     private fun initDagger() {
-        flickerPhotoComponent = DaggerFlickerPhotoComponent.create()
+        flickerPhotoComponent =
+            DaggerFlickerPhotoComponent.builder().flickerPhotoModule(FlickerPhotoModule()).build()
     }
 
     companion object {
@@ -24,5 +33,10 @@ class IncredibleFlickerPhotosApplication : Application() {
             instance ?: IncredibleFlickerPhotosApplication().also {
                 instance = it
             }
+
+        @VisibleForTesting()
+        fun setComponent(appComponent: FlickerPhotoComponent) {
+            flickerPhotoComponent = appComponent
+        }
     }
 }
